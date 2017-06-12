@@ -22,6 +22,22 @@ namespace AirlinePlanner
       Assert.Equal(0, result);
     }
 
+    [Fact]
+    public void Test_Equal_ReturnsSame()
+    {
+      //arrange, act
+      Flight flightOne = new Flight("Alaska", new DateTime(2016, 1, 12, 23, 59, 59), "On-Time");
+      Flight flightTwo = new Flight("Alaska", new DateTime(2016, 1, 12, 23, 59, 59), "On-Time");
+      //assert
+      Assert.Equal(flightOne, flightTwo);
+    }
+
+    [Fact]
+    public void Test_Save_SavesToDB()
+    {
+
+    }
+    
     public void Dispose()
     {
       Flight.DeleteAll();
