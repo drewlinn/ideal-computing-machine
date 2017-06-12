@@ -6,6 +6,7 @@ using System.Collections.Generic;
 
 namespace AirlinePlanner
 {
+  [Collection("AirplainePlanner")]
   public class CityTest : IDisposable
   {
     public CityTest()

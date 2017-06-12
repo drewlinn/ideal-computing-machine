@@ -6,6 +6,7 @@ using System.Collections.Generic;
 
 namespace AirlinePlanner
 {
+  [Collection("AirlinePlanner")]
   public class FlightTest : IDisposable
   {
     public FlightTest()
@@ -26,8 +27,8 @@ namespace AirlinePlanner
     public void Test_Equal_ReturnsSame()
     {
       //arrange, act
-      Flight flightOne = new Flight("Alaska", new DateTime(2016, 1, 12, 23, 59, 59), "On-Time");
-      Flight flightTwo = new Flight("Alaska", new DateTime(2016, 1, 12, 23, 59, 59), "On-Time");
+      Flight flightOne = new Flight("Alaska", new DateTime(2016, 01, 12, 23, 00, 00), "On-Time");
+      Flight flightTwo = new Flight("Alaska", new DateTime(2016, 01, 12, 23, 00, 00), "On-Time");
       //assert
       Assert.Equal(flightOne, flightTwo);
     }
@@ -35,9 +36,16 @@ namespace AirlinePlanner
     [Fact]
     public void Test_Save_SavesToDB()
     {
+      //arrange, act
+      Flight newFlight = new Flight("Alaska", DateTime.Now, "On-Time");
+      newFlight.Save();
 
+      List<Flight> result = Flight.GetAll();
+      List<Flight> allFlights  = new List<Flight> {newFlight};
+      //assert
+      Assert.Equal(result, allFlights);
     }
-    
+
     public void Dispose()
     {
       Flight.DeleteAll();

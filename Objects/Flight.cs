@@ -19,13 +19,65 @@ namespace AirlinePlanner
       _id = Id;
     }
 
-    public string Name {get; set;}
-    public DateTime Depart {get; set;}
-    public string Status {get; set;}
+    public string GetName()
+    {
+      return _name;
+    }
+    public void SetName(string newName)
+    {
+      _name = newName;
+    }
+    public DateTime GetDepart()
+    {
+      return _depart;
+    }
+    public void SetDepart(DateTime newDateTime)
+    {
+      _depart = newDateTime;
+    }
+    public string GetStatus()
+    {
+      return _status;
+    }
+    public void SetStatus(string newStatus)
+    {
+      _status = newStatus;
+    }
 
     public int GetId()
     {
       return _id;
+    }
+
+    public void Save()
+    {
+      SqlConnection conn = DB.Connection();
+      conn.Open();
+
+      SqlCommand cmd = new SqlCommand("INSERT INTO flights (name, depart, status) OUTPUT INSERTED.id VALUES (@FlightName, @FlightDepart, @FlightStatus);", conn);
+      SqlParameter nameParam = new SqlParameter("@FlightName", this.GetName());
+      Console.WriteLine(this.GetName());
+      SqlParameter departParam = new SqlParameter("@FlightDepart", this.GetDepart());
+      SqlParameter statusParam = new SqlParameter("@FlightStatus", this.GetStatus());
+
+      cmd.Parameters.Add(nameParam);
+      cmd.Parameters.Add(departParam);
+      cmd.Parameters.Add(statusParam);
+
+      SqlDataReader rdr = cmd.ExecuteReader();
+
+      while(rdr.Read())
+      {
+        this._id = rdr.GetInt32(0);
+      }
+      if (rdr != null)
+      {
+        rdr.Close();
+      }
+      if (conn != null)
+      {
+        conn.Close();
+      }
     }
 
     public static List<Flight> GetAll()
@@ -70,17 +122,17 @@ namespace AirlinePlanner
       {
         Flight newFlight = (Flight) otherFlight;
         bool idEquality = (this.GetId() == newFlight.GetId());
-        bool nameEquality = (this.Name == newFlight.Name);
-        bool departEquality = (this.Depart == newFlight.Depart);
-        bool statusEquality = (this.Status == newFlight.Status);
+        bool nameEquality = (this.GetName() == newFlight.GetName());
+        bool departEquality = (this.GetDepart() == newFlight.GetDepart());
+        bool statusEquality = (this.GetStatus() == newFlight.GetStatus());
 
         return (idEquality && nameEquality);
       }
     }
-    public override int GetHashCode()
-    {
-      return this.Name.GetHashCode();
-    }
+    // public override int GetHashCode()
+    // {
+    //   return this.Name.GetHashCode();
+    // }
 
     public static void DeleteAll()
     {
